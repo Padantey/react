@@ -1,6 +1,7 @@
 import "../CSS/signup.css";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import axios from "axios";
+import { NavLink, Redirect } from "react-router-dom";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -10,8 +11,12 @@ class SignUp extends React.Component {
       email: "",
       college: "",
       password: "",
-      Cpassword: "",
-      phone: ""
+      password2: "",
+      phone: "",
+      university: "",
+      faculty: "",
+      semester: "",
+      isRegister: "false"
     };
   }
   handleInputChange = e => {
@@ -19,10 +24,36 @@ class SignUp extends React.Component {
       [e.target.name]: e.target.value
     });
   };
-  handleInputSubmit = e => {
+
+  async handleInputSubmit(e) {
     e.preventDefault();
-  };
+    const user = {
+      name: this.state.name,
+      email: this.state.email,
+      collegeName: this.state.collegeName,
+      password: this.state.password2,
+      password2: this.state.password2,
+      contact: this.state.contact,
+      university: this.state.university,
+      faculty: this.state.faculty,
+      semester: this.state.semester
+    };
+    axios
+      .post("http://api/users/signup", user)
+      .then(res => {
+        console.log(res);
+        localStorage.setItem("userData", res);
+        this.setState({ isRegister: "true" });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   render() {
+    if (this.state.isRegister) {
+      return <Redirect to={"/signin"} />;
+    }
     return (
       <div>
         <div className="wrapper clearfix">
@@ -31,19 +62,30 @@ class SignUp extends React.Component {
             <h2 align="center">---SIGN UP---</h2>
             <form action="#" method="" align="center">
               <div className="element" align="center">
-                <input type="text" name="name" placeholder="Name" required />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  required
+                  value={this.state.name}
+                  onChange={this.handleInputChange}
+                />
 
                 <input
                   type="email"
-                  name="password"
+                  name="email"
                   placeholder="Email Address"
                   required
+                  value={this.state.email}
+                  onChange={this.handleInputChange}
                 />
                 <input
                   type="text"
-                  name="college"
+                  name="collegeName"
                   placeholder="College"
                   required
+                  value={this.state.collegeName}
+                  onChange={this.handleInputChange}
                 />
 
                 <input
@@ -51,29 +93,43 @@ class SignUp extends React.Component {
                   name="password"
                   placeholder="Password"
                   required
+                  value={this.state.password}
+                  onChange={this.handleInputChange}
                 />
                 <input
                   type="password"
-                  name="Cpassword"
+                  name="password2"
                   placeholder="Confirm Password"
                   required
+                  value={this.state.password2}
+                  onChange={this.handleInputChange}
                 />
                 <input
                   type="tel"
-                  name="phone"
+                  name="contact"
                   placeholder="Contact Number"
                   required
+                  value={this.state.contact}
+                  onChange={this.handleInputChange}
                 />
                 <div className="box">
                   <label htmlFor="University-select" />
-                  <select name="university" id="University-select">
+                  <select
+                    name="university"
+                    id="University-select"
+                    onChange={this.handleInputChange}
+                  >
                     <option value="tu">Tribhuvan University</option>
                     <option value="ku">Kathmandu University</option>
                     <option value="pu">Pokhara University</option>
                   </select>
                   <br />
                   <label htmlFor="Faculty-select" />
-                  <select name="faculty" id="Faculty-select">
+                  <select
+                    name="faculty"
+                    id="Faculty-select"
+                    onChange={this.handleInputChange}
+                  >
                     <option value="bct">Computer Engineering</option>
                     <option value="bex"> Electronics Engineering</option>
                     <option value="bel"> Electrical Engineering</option>
@@ -83,7 +139,11 @@ class SignUp extends React.Component {
                   </select>
                   <br />
                   <label htmlFor="semester-select" />
-                  <select name="semester" id="semester-select">
+                  <select
+                    name="semester"
+                    id="semester-select"
+                    onChange={this.handleInputChange}
+                  >
                     <option value="1">First Semester</option>
                     <option value="2">Second Semester</option>
                     <option value="3">Third Semester</option>
@@ -94,9 +154,14 @@ class SignUp extends React.Component {
                     <option value="8"> Eighth Semester</option>
                   </select>
                 </div>
+
                 <div className="btn ">
-                  <button className="btn btn-primary " type="submit">
-                    Log In
+                  <button
+                    className="btn btn-primary "
+                    type="submit"
+                    onClick={this.handleInputSubmit}
+                  >
+                    Sign Up
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import SignIn from "./signInUp/SignIn";
 import SignUp from "./signInUp/SignUp";
+import HomePage from "./Home/HomePage";
 import Error from "../Components/Navigation/Error";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -12,8 +13,9 @@ class App extends React.Component {
     const newAppState = (
       <Router>
         <Switch>
-          <Route path="/signIn" component={SignIn} exact />
+          <Route path="/signin" component={SignIn} exact />
           <Route path="/signup" component={SignUp} exact />
+          <Route path="/homepage" component={HomePage} exact />
           <Route component={Error} />
         </Switch>
       </Router>

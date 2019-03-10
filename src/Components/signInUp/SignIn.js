@@ -1,13 +1,15 @@
 import "../CSS/signin.css";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
+import axios from "axios";
 
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      password: ""
+      password: "",
+      isLoggedIn: "false"
     };
   }
   handleChange = e => {
@@ -15,11 +17,30 @@ class SignIn extends React.Component {
       [e.target.name]: e.target.value
     });
   };
-  handleFormSubmit = e => {
+
+  handleSubmit(e) {
     e.preventDefault();
-  };
+    const loginUser = {
+      name: this.state.name,
+      password: this.state.password
+    };
+
+    axios
+      .post("http://api/user/signin", loginUser)
+      .then(res => {
+        console.log(res);
+        localStorage.setItem("loggedData", res);
+        this.setState({ isLoggedIn: "true" });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   render() {
+    if (this.state.isLoggedIn) {
+      return <Redirect to={"/homepage"} />;
+    }
     return (
       <div className="wrapper clearfix">
         <div className="panel-1">
