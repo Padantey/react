@@ -11,25 +11,28 @@ class SignIn extends React.Component {
       password: "",
       isLoggedIn: "false"
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  handleChange = e => {
+  handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
     });
-  };
+    console.log(e.target.value);
+  }
 
   handleSubmit(e) {
     e.preventDefault();
+
     const loginUser = {
       name: this.state.name,
       password: this.state.password
     };
 
     axios
-      .post("http://api/user/signin", loginUser)
+      .post("api/user/signin", { loginUser })
       .then(res => {
         console.log(res);
-        localStorage.setItem("loggedData", res);
         this.setState({ isLoggedIn: "true" });
       })
       .catch(err => {
@@ -38,8 +41,8 @@ class SignIn extends React.Component {
   }
 
   render() {
-    if (this.state.isLoggedIn) {
-      return <Redirect to={"/homepage"} />;
+    if (this.state.isLoggedIn === "true") {
+      return <Redirect to={"/home"} />;
     }
     return (
       <div className="wrapper clearfix">

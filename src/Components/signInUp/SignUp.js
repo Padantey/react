@@ -12,26 +12,28 @@ class SignUp extends React.Component {
       college: "",
       password: "",
       password2: "",
-      phone: "",
+      contact: "",
       university: "",
       faculty: "",
       semester: "",
       isRegister: "false"
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleInputSubmit = this.handleInputSubmit.bind(this);
   }
-  handleInputChange = e => {
+  handleInputChange(e) {
     this.setState({
       [e.target.name]: e.target.value
     });
-  };
+  }
 
-  async handleInputSubmit(e) {
+  handleInputSubmit(e) {
     e.preventDefault();
     const user = {
       name: this.state.name,
       email: this.state.email,
-      collegeName: this.state.collegeName,
-      password: this.state.password2,
+      college: this.state.college,
+      password: this.state.password,
       password2: this.state.password2,
       contact: this.state.contact,
       university: this.state.university,
@@ -39,10 +41,9 @@ class SignUp extends React.Component {
       semester: this.state.semester
     };
     axios
-      .post("http://api/users/signup", user)
+      .post("api/users/signup", { user })
       .then(res => {
         console.log(res);
-        localStorage.setItem("userData", res);
         this.setState({ isRegister: "true" });
       })
       .catch(err => {
@@ -51,7 +52,7 @@ class SignUp extends React.Component {
   }
 
   render() {
-    if (this.state.isRegister) {
+    if (this.state.isRegister === "true") {
       return <Redirect to={"/signin"} />;
     }
     return (
@@ -81,10 +82,10 @@ class SignUp extends React.Component {
                 />
                 <input
                   type="text"
-                  name="collegeName"
+                  name="college"
                   placeholder="College"
                   required
-                  value={this.state.collegeName}
+                  value={this.state.college}
                   onChange={this.handleInputChange}
                 />
 
@@ -105,7 +106,7 @@ class SignUp extends React.Component {
                   onChange={this.handleInputChange}
                 />
                 <input
-                  type="tel"
+                  type="number"
                   name="contact"
                   placeholder="Contact Number"
                   required
